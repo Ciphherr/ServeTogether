@@ -55,8 +55,8 @@ const OrganizationDetails = () => {
       {/* Cover */}
      
       <section className="w-full h-[320px] bg-linear-to-br from-emerald-950 via-green-900 to-sky-900 flex items-center">
-        <div className="max-w-5xl mx-auto px-6">
-          <p className="text-emerald-300 text-sm font-medium uppercase md:text-center mb-4">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <p className="text-emerald-300 text-sm font-medium uppercase mb-4">
             Our Mission
           </p>
           <h1 className="text-2xl md:text-3xl font-bold text-white opacity-40 leading-tight max-w-3xl">

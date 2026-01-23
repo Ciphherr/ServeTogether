@@ -5,6 +5,7 @@ import OpportunityCard from "../components/OpportunityCard";
 import { getUserProfileByEmail } from "../api/helper";
 import {getRegisteredOpportunitiesByUserUID} from "../api/helper"
 import { useAuth } from "../context/AuthContext";
+import userImage from "../assets/user.jpg"
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ if (!user?.contentstack_uid) return;
   {/* Left: Avatar + Info */}
   <div className="flex items-center gap-4">
     <img
-      src={profile.profile_image?.url}
+      src={profile.profile_image?.url || userImage}
       alt={profile.name}
       className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border border-gray-200"
     />
