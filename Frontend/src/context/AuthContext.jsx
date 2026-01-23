@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     const fetchProfile = async () => {
       try {
         const res = await api.get(
-          "/auth/profile",
+          "/api/auth/profile",
           { withCredentials: true }
         );
 
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await api.post(
-      "/auth/logout",
+      "/api/auth/logout",
       {},
       { withCredentials: true }
     );

@@ -30,7 +30,7 @@ const handleSubmit = async (e) => {
   setError("");
 
   try {
-    const url = `/auth/${
+    const url = `/api/auth/${
       isLogin ? "login" : "register"
     }`;
 
