@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import api from "../api/axios";
+import api from "../api/axios.js";
 
 const AuthContext = createContext(null);
 
@@ -33,8 +33,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post(
-      "http://localhost:3000/api/auth/logout",
+    await api.post(
+      "/auth/logout",
       {},
       { withCredentials: true }
     );
