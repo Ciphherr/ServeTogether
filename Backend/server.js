@@ -13,7 +13,7 @@ app.use(cookieParser());
 connectDB();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: "serve-together-cvp.vercel.app",
   credentials: true, 
 }));
 app.use(express.json());
