@@ -1,0 +1,34 @@
+
+#create environment file name as .env.local
+#and place following configuration data.
+PORT = 3000
+CONTENTSTACK_API_KEY= *
+CONTENTSTACK_DELIVERY_TOKEN= * 
+CONTENTSTACK_ENVIRONMENT= *
+CONTENTSTACK_MANAGEMENT_TOKEN= *
+LOGIN_EMAIL = your_email
+LOGIN_PASSWORD= your_password
+
+#for authentication
+MONGO_URI=*
+JWT_SECRET=*
+JWT_EXPIRES_IN=7d
+
+# For live preview 
+CONTENTSTACK_PREVIEW_TOKEN= *
+CONTENTSTACK_APP_HOST=app.contentstack.com
+CONTENTSTACK_PREVIEW_HOST=rest-preview.contentstack.com
+CONTENTSTACK_LIVE_PREVIEW=true
+CONTENTSTACK_LIVE_EDIT_TAGS=true
+
+#site-map
+NEXT_PUBLIC_HOSTED_URL=http://localhost:3000
+# Requires host url for sitemap. Localhost:3000 is set as default value
+
+# For Live preview default value is to true to disable live preview set CONTENTSTACK_LIVE_PREVIEW=false
+# For live edit tags default value is set to false to enable live edit tag set CONTENTSTACK_LIVE_EDIT_TAGS=true
+# For NA region add CONTENTSTACK_APP_HOST=app.contentstack.com
+# For EU region add CONTENTSTACK_APP_HOST=eu-app.contentstack.com
+
+# For setting custom host add CONTENTSTACK_API_HOST=for(NA: cdn.contentstack.io/, EU: eu-cdn.contentstack.com/)
+CONTENTSTACK_API_HOST=cdn.contentstack.io

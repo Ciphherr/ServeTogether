@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@keyframes gradient {
+  0% { background-position: 0% }
+  100% { background-position: 200% }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 6s linear infinite;
+}
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
+}
+
+
