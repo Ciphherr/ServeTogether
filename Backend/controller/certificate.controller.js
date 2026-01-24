@@ -30,7 +30,7 @@ export const generateCertificate = async (req, res) => {
     const { name, event, date, certId } = req.body
 
     let html = fs.readFileSync(
-      path.join(process.cwd(), "templates/certificate.html"),
+      path.join(process.cwd(), "Backend/templates/certificate.html"),
       "utf8"
     )
 
