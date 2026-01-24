@@ -3,6 +3,7 @@ import { ArrowLeft, Mail, Globe } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getOpportunitiesByOrganizationUID, getOrganizationByUID } from "../api/helper";
 import OpportunityCard from "../components/OpportunityCard";
+import { BeatLoader } from "react-spinners";
 
 const OrganizationDetails = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const OrganizationDetails = () => {
 
 
   if (loading) {
-    return <p className="p-10 text-gray-500 text-center">Loading...</p>;
+    return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
   }
 
   if (!organization) {

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import OrganizationCard from "../components/OrganisationCard";
 import { getOrganizations } from "../api/helper";
+import { BeatLoader } from "react-spinners";
 
 const OrganizationsPage = () => {
   const [organizations, setOrganizations] = useState([]);
@@ -29,7 +30,7 @@ const OrganizationsPage = () => {
   }, [organizations, searchQuery]);
 
   if (!organizations.length) {
-    return <div className="p-10 text-gray-500">Loading...</div>;
+    return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
   }
 
   return (

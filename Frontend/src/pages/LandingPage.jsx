@@ -5,6 +5,8 @@ import HeroSection from "../components/HeroSection";
 import ImpactCarousel from "../components/imageCorousel";
 import ImpactTimeline from "../components/impactTimeline";
 import Navbar from "../components/Navbar";
+import { BeatLoader } from "react-spinners";
+
 
 const LandingPage = () => {
   const [pageData, setPageData] = useState(null);
@@ -13,7 +15,7 @@ const LandingPage = () => {
     getLandingPage().then(setPageData);
   }, []);
 
-  if (!pageData) return <div>Loading...</div>;
+  if (!pageData) return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
 
 
   return (

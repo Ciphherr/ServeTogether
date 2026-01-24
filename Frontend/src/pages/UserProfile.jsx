@@ -6,6 +6,7 @@ import { getUserProfileByEmail } from "../api/helper";
 import { getRegisteredOpportunitiesByUserUID } from "../api/helper";
 import { useAuth } from "../context/AuthContext";
 import userImage from "../assets/user.jpg";
+import { BeatLoader } from "react-spinners";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const UserProfile = () => {
    const registeredOpportunities = UserOpportunities.filter((op) => op.upcoming === true) || [];
 
   if (loading) {
-    return <p className="p-10 text-gray-500 text-center">Loading profile...</p>;
+    return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
   }
 
   if (!profile) {

@@ -5,7 +5,8 @@ import { ArrowLeft, MapPin, Calendar } from "lucide-react";
 import RegisterModal from "../components/RegisterModal";
 import SuccessToast from "../components/successToast";
 import { useAuth } from "../context/AuthContext";
-
+import {getRegistrationByOpportunityAndUser} from "../api/helper"
+import { BeatLoader } from "react-spinners";
 
 const OpportunityDetails = () => {
   const { uid } = useParams();
@@ -13,6 +14,7 @@ const OpportunityDetails = () => {
   const [opportunity, setOpportunity] = useState(null);
   const [open, setOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false)
   const {user} = useAuth();
 
 
@@ -25,8 +27,34 @@ const OpportunityDetails = () => {
   }, [uid]);
 
 
+  useEffect(() => {
+    const fetchRegistration = async () => {
+      try {
+        const registration =
+          await getRegistrationByOpportunityAndUser(
+            uid,
+            user.contentstack_uid
+          )
+
+        if (registration) {
+          setIsRegistered(true)
+        } else {
+          setIsRegistered(false)
+        }
+      } catch (error) {
+        console.error("Error checking registration:", error)
+        setIsRegistered(false)
+      } 
+    }
+
+    if (uid && user.contentstack_uid) {
+      fetchRegistration()
+    }
+  }, [uid, user.contentstack_uid])
+
+
   if (!opportunity) {
-    return <p className="p-10 text-gray-500">Loading...</p>;
+    return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
   }
 
   const dateObj = new Date(opportunity.event_date);
@@ -96,13 +124,18 @@ const OpportunityDetails = () => {
         <div className="my-14 h-px bg-gray-200" />
 
         {/* CTA */}
-        {opportunity.upcoming && 
+        {opportunity.upcoming && !isRegistered &&
         <div className="text-center">
           <button onClick={() =>  setOpen(true)} className="px-12 py-4 rounded-full bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition">
             Register Now
           </button>
           {open && <RegisterModal eventUID={uid} eventTitle={opportunity.title} onClose={() => setOpen(false)} onSuccess={handleSuccess} userUID = {user.contentstack_uid} />}  
         </div>}
+        {isRegistered && opportunity.upcoming &&
+          <div className="text-center">
+            <p className="text-lg text-emerald-600 font-semibold p-5">Thanks for Registering! On successful participation you can generate your certificate from here</p>
+          </div>
+        }
       </article>
     </div>
   );

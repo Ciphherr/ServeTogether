@@ -115,3 +115,32 @@ export const getRegisteredOpportunitiesByUserUID = async (userUID) => {
     throw err;
   }
 };
+
+export const getRegistrationByOpportunityAndUser = async (
+  opportunityUid,
+  userUid
+) => {
+  try {
+    const query = Stack
+      .ContentType("registration_chirag")
+      .Query()
+
+    query.where("opportunity.uid", opportunityUid)
+    query.where("user.uid", userUid)
+
+    const result = await query.toJSON().find()
+    console.log(result[0][0]);
+
+    if (result?.[0]?.length > 0) {
+      return result[0][0] // first matching registration
+    }
+
+    return null
+  } catch (error) {
+    console.error(
+      "Error fetching registration (Delivery SDK):",
+      error
+    )
+    return null
+  }
+}

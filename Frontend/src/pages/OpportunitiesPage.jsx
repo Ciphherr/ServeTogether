@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Search, Leaf } from "lucide-react";
 import { getOpportunities } from "../api/helper";
 import ContentstackLivePreview from "@contentstack/live-preview-utils";
+import { BeatLoader } from "react-spinners";
 
 ContentstackLivePreview.init({
     enable: true
@@ -51,7 +52,7 @@ const OpportunitiesPage = () => {
     });
   }, [opportunities, searchQuery, selectedCause]);
 
-  if (!opportunities.length) return <div>Loading...</div>;
+  if (!opportunities.length) return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
 
   return (
     <div className="min-h-screen bg-white text-gray-800 pt-28">
