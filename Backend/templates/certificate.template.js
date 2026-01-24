@@ -1,19 +1,24 @@
+export const certificateTemplate = ({
+  name,
+  event,
+  date,
+  certId,
+  bgImage,
+}) => `
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <style>
     body {
       margin: 0;
-      padding: 0;
-    }
-
-    .certificate {
-      position: relative;
       width: 1123px;
       height: 794px;
-      background-image: url("{{BG_IMAGE}}");
+      background-image: url('${bgImage}');
       background-size: cover;
+      background-repeat: no-repeat;
       font-family: Arial, sans-serif;
+      position: relative;
     }
 
     .name {
@@ -40,20 +45,19 @@
       font-size: 22px;
     }
 
-    .cert-id {
+    .cert {
       position: absolute;
       bottom: 50px;
       left: 80px;
-      font-size: 14px;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="certificate">
-    <div class="name">{{NAME}}</div>
-    <div class="event">{{EVENT}}</div>
-    <div class="date">{{DATE}}</div>
-    <div class="cert-id">{{CERT_ID}}</div>
-  </div>
+  <div class="name">${name}</div>
+  <div class="event">${event}</div>
+  <div class="date">${date}</div>
+  <div class="cert">${certId}</div>
 </body>
 </html>
+`

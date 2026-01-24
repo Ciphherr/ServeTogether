@@ -1,19 +1,17 @@
-import stack from "../config/contentstack.js";
+import stack from "../config/contentstack.js"
 import chromium from "@sparticuz/chromium"
-import puppeteer from "puppeteer-core"
-import fs from "fs"
-import path from "path"
+import puppeteerCore from "puppeteer-core"
+import { certificateTemplate } from "../templates/certificate.template.js"
 
 const isVercel = !!process.env.VERCEL
 
 const getCertificateAssetURL = async () => {
   try {
     const response = await stack.asset()
-      .query({ folder: 'bltb16dcf08353211bb' }) // folder path in your stack
+      .query({ folder: "bltb16dcf08353211bb" }) // your stack folder
       .find()
 
-      const result = response.items[0].url;
-      return result
+    return response.items?.[0]?.url || null
   } catch (err) {
     console.error("Error fetching certificate asset:", err)
     return null
@@ -22,30 +20,33 @@ const getCertificateAssetURL = async () => {
 
 export const generateCertificate = async (req, res) => {
   try {
+    // 1️⃣ Background image
     const BG_IMAGE_URL = await getCertificateAssetURL()
     if (!BG_IMAGE_URL) {
       return res.status(500).json({ error: "Certificate template missing" })
     }
 
-    const { name, event, date, certId } = req.body
+    // 2️⃣ Data (later this will come from registration)
+    const {
+      name ,
+      event ,
+      date ,
+      certId ,
+    } = req.body
 
-    let html = fs.readFileSync(
-      path.join(process.cwd(), "Backend/templates/certificate.html"),
-      "utf8"
-    )
+    // 3️⃣ Generate HTML (NO fs)
+    const html = certificateTemplate({
+      name,
+      event,
+      date,
+      certId,
+      bgImage: BG_IMAGE_URL,
+    })
 
-    html = html
-      .replace("{{NAME}}", name )
-      .replace("{{EVENT}}", event)
-      .replace("{{DATE}}", date )
-      .replace("{{CERT_ID}}", certId || "ST-5678-67")
-      .replace("{{BG_IMAGE}}", BG_IMAGE_URL)
-
+    // 4️⃣ Launch browser
     let browser
-
-
     if (isVercel) {
-      browser = await puppeteer.launch({
+      browser = await puppeteerCore.launch({
         args: chromium.args,
         executablePath: await chromium.executablePath(),
         headless: chromium.headless,
@@ -55,6 +56,7 @@ export const generateCertificate = async (req, res) => {
       browser = await puppeteer.launch({ headless: true })
     }
 
+    // 5️⃣ Render PDF
     const page = await browser.newPage()
     await page.setContent(html, { waitUntil: "networkidle0" })
 
@@ -66,8 +68,12 @@ export const generateCertificate = async (req, res) => {
 
     await browser.close()
 
+    // 6️⃣ Response
     res.setHeader("Content-Type", "application/pdf")
-    res.setHeader("Content-Disposition", "attachment; filename=test.pdf")
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${certId}.pdf"`
+    )
     res.send(pdfBuffer)
 
   } catch (err) {
@@ -75,5 +81,3 @@ export const generateCertificate = async (req, res) => {
     res.status(500).json({ error: "Certificate generation failed" })
   }
 }
-
-
