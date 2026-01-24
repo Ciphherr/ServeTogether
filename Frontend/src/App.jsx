@@ -8,6 +8,7 @@ import OrganizationDetails from "./pages/OrganizationDetails";
 import AuthPage from "./pages/AuthPage";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CertificatePreview from "./pages/certificatePreview";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         <Route path="/authentication" element={<AuthPage />} />
         <Route path="/opportunities/:uid" element={<ProtectedRoute><OpportunityDetails /></ProtectedRoute>} />
         <Route path="/organizations/:uid" element={<ProtectedRoute><OrganizationDetails/></ProtectedRoute>} />
-        
+        <Route path="/certificate" element={<CertificatePreview />}/>    
       </Routes>
   );
 }

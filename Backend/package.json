@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-    "engines": {
+  "engines": {
     "node": "24.x"
   },
   "description": "",
@@ -16,6 +16,7 @@
   "type": "module",
   "dependencies": {
     "@contentstack/management": "^1.27.2",
+    "@sparticuz/chromium": "^143.0.4",
     "bcryptjs": "^3.0.3",
     "contentstack": "^3.26.3",
     "cookie-parser": "^1.4.7",
@@ -24,6 +25,10 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.5",
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "puppeteer-core": "^24.36.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.36.0"
   }
 }

@@ -3,9 +3,9 @@ import { ArrowLeft, LogOut, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import OpportunityCard from "../components/OpportunityCard";
 import { getUserProfileByEmail } from "../api/helper";
-import {getRegisteredOpportunitiesByUserUID} from "../api/helper"
+import { getRegisteredOpportunitiesByUserUID } from "../api/helper";
 import { useAuth } from "../context/AuthContext";
-import userImage from "../assets/user.jpg"
+import userImage from "../assets/user.jpg";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("registered");
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [registeredOpportunities, setRegisteredOpportunities] = useState([]);
+  const [UserOpportunities, setUserOpportunities] = useState([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -30,42 +30,38 @@ const UserProfile = () => {
     fetchProfile();
   }, [user.email]);
 
+  useEffect(() => {
+    if (!user?.contentstack_uid) return;
 
-useEffect(() => {
-if (!user?.contentstack_uid) return;
+    const fetchRegistrations = async () => {
+      try {
+        const data = await getRegisteredOpportunitiesByUserUID(
+          user.contentstack_uid,
+        );
+        setUserOpportunities(data);
+        console.log(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchRegistrations = async () => {
-    try {
-      const data = await getRegisteredOpportunitiesByUserUID(user.contentstack_uid);
-      setRegisteredOpportunities(data);
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchRegistrations();
-}, []);
+    fetchRegistrations();
+  }, []);
 
 
   const completedOpportunities =
-    registeredOpportunities.filter((op) => op.upcoming === false) || [];
+    UserOpportunities.filter((op) => op.upcoming === false) || [];
+
+   const registeredOpportunities = UserOpportunities.filter((op) => op.upcoming === true) || [];
 
   if (loading) {
-    return (
-      <p className="p-10 text-gray-500 text-center">Loading profile...</p>
-    );
+    return <p className="p-10 text-gray-500 text-center">Loading profile...</p>;
   }
 
-
   if (!profile) {
-    return (
-      <p className="p-10 text-gray-500 text-center">
-        Profile not found.
-      </p>
-    );
+    return <p className="p-10 text-gray-500 text-center">Profile not found.</p>;
   }
 
   return (
@@ -90,43 +86,40 @@ if (!user?.contentstack_uid) return;
           Back
         </button>
 
-{/* User Header */}
-<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-  
-  {/* Left: Avatar + Info */}
-  <div className="flex items-center gap-4">
-    <img
-      src={profile.profile_image?.url || userImage}
-      alt={profile.name}
-      className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border border-gray-200"
-    />
+        {/* User Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+          {/* Left: Avatar + Info */}
+          <div className="flex items-center gap-4">
+            <img
+              src={profile.profile_image?.url || userImage}
+              alt={profile.name}
+              className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border border-gray-200"
+            />
 
-    <div>
-      <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
-        {profile.name}
-      </h1>
-      <p className="text-sm text-gray-500 break-all">
-        {profile.email}
-      </p>
-    </div>
-  </div>
+            <div>
+              <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
+                {profile.name}
+              </h1>
+              <p className="text-sm text-gray-500 break-all">{profile.email}</p>
+            </div>
+          </div>
 
-  {/* Actions */}
-  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-    <button className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-lg text-gray-600 hover:text-emerald-600 hover:border-emerald-600 transition w-full sm:w-auto">
-      <Key size={16} />
-      Change Password
-    </button>
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <button className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-lg text-gray-600 hover:text-emerald-600 hover:border-emerald-600 transition w-full sm:w-auto">
+              <Key size={16} />
+              Change Password
+            </button>
 
-    <button
-      onClick={logout}
-      className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-lg text-red-600 hover:border-red-600 transition w-full sm:w-auto"
-    >
-      <LogOut size={16} />
-      Logout
-    </button>
-  </div>
-</div>
+            <button
+              onClick={logout}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-lg text-red-600 hover:border-red-600 transition w-full sm:w-auto"
+            >
+              <LogOut size={16} />
+              Logout
+            </button>
+          </div>
+        </div>
 
         {/* Tabs */}
         <div className="flex gap-6 border-b border-gray-200 mb-10">

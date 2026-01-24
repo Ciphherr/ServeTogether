@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .certificate {
+      position: relative;
+      width: 1123px;
+      height: 794px;
+      background-image: url("{{BG_IMAGE}}");
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+    .name {
+      position: absolute;
+      top: 360px;
+      width: 100%;
+      text-align: center;
+      font-size: 48px;
+      font-weight: bold;
+    }
+
+    .event {
+      position: absolute;
+      top: 453px;
+      width: 100%;
+      text-align: center;
+      font-size: 22px;
+    }
+
+    .date {
+      position: absolute;
+      bottom: 263px;
+      right: 420px;
+      font-size: 22px;
+    }
+
+    .cert-id {
+      position: absolute;
+      bottom: 50px;
+      left: 80px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="certificate">
+    <div class="name">{{NAME}}</div>
+    <div class="event">{{EVENT}}</div>
+    <div class="date">{{DATE}}</div>
+    <div class="cert-id">{{CERT_ID}}</div>
+  </div>
+</body>
+</html>

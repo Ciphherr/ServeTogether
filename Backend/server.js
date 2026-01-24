@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import registrationRoutes from "./router/registration.route.js"
 import connectDB from "./config/db.js";
 import authRoutes from "./router/auth.route.js"
+import certificateRouter from "./router/certificate.route.js"
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get("/" ,(req, res)=>{
 });
 app.use("/api", registrationRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/certificates", certificateRouter)
 
 const PORT = process.env.PORT;
 

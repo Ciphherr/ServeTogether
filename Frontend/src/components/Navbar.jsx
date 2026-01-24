@@ -18,22 +18,22 @@ const Navbar = () => {
         </h1>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8 text-sky-400 font-medium">
-          <Link to="/opportunities" className="hover:text-emerald-400">
+        <div className="hidden md:flex gap-8 text-emerald-400 font-medium">
+          <Link to="/opportunities" className="hover:text-sky-400">
             Opportunities
           </Link>
-          <Link to="/organizations" className="hover:text-emerald-400">
+          <Link to="/organizations" className="hover:text-sky-400">
             Organizations
           </Link>
           {isAuthenticated ? (
           <Link
             to="/myprofile"
-            className="hover:text-emerald-400"
+            className="hover:text-sky-400"
           >
             My Profile
           </Link>
       ) : (
-        <Link to="/authentication" className="text-black">
+        <Link to="/authentication" className="text-emerald-400 hover:text-sky-400">
           Login
         </Link>
       )}
@@ -51,11 +51,11 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t transition-all duration-300 ease-out">
-          <div className="flex flex-col px-6 py-6 gap-4 text-black font-medium">
+          <div className="flex flex-col px-6 py-6 gap-4 font-medium">
             <Link
               to="/opportunities"
               onClick={() => setOpen(false)}
-              className="hover:text-emerald-400"
+              className="text-emerald-400"
             >
               Opportunities
             </Link>
@@ -63,19 +63,19 @@ const Navbar = () => {
             <Link
               to="/organizations"
               onClick={() => setOpen(false)}
-              className="hover:text-emerald-400"
+              className="text-emerald-400"
             >
               Organizations
             </Link>
                       {isAuthenticated ? (
           <Link
             to="/myprofile"
-            className="text-black font-medium"
+            className="text-emerald-400 font-medium"
           >
             My Profile
           </Link>
       ) : (
-        <Link to="/authentication" className="text-black">
+        <Link to="/authentication" className="text-emerald-400">
           Login
         </Link>
       )}
