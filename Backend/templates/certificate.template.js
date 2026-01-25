@@ -32,17 +32,18 @@ export const certificateTemplate = ({
 
     .event {
       position: absolute;
-      top: 453px;
+      top: 457px;
       width: 100%;
       text-align: center;
-      font-size: 22px;
+      font-size: 25px;
+      font-weight : bold;
     }
 
     .date {
       position: absolute;
-      bottom: 263px;
-      right: 420px;
-      font-size: 22px;
+      bottom: 265px;
+      right: 412px;
+      font-size: 24px;
     }
 
     .cert {

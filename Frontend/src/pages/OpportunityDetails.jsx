@@ -5,8 +5,9 @@ import { ArrowLeft, MapPin, Calendar } from "lucide-react";
 import RegisterModal from "../components/RegisterModal";
 import SuccessToast from "../components/successToast";
 import { useAuth } from "../context/AuthContext";
-import {getRegistrationByOpportunityAndUser} from "../api/helper"
+import { getRegistrationByOpportunityAndUser } from "../api/helper";
 import { BeatLoader } from "react-spinners";
+import { generateCertificate } from "../api/posting";
 
 const OpportunityDetails = () => {
   const { uid } = useParams();
@@ -14,9 +15,9 @@ const OpportunityDetails = () => {
   const [opportunity, setOpportunity] = useState(null);
   const [open, setOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false)
-  const {user} = useAuth();
-
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [registrationData, setRegistrationData] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,38 +27,36 @@ const OpportunityDetails = () => {
     fetchData();
   }, [uid]);
 
+  console.log("34:", opportunity);
 
   useEffect(() => {
     const fetchRegistration = async () => {
       try {
-        const registration =
-          await getRegistrationByOpportunityAndUser(
-            uid,
-            user.contentstack_uid
-          )
-
+        const registration = await getRegistrationByOpportunityAndUser(
+          uid,
+          user.contentstack_uid,
+        );
+        console.log("ha:", registration);
         if (registration) {
-          setIsRegistered(true)
+          setIsRegistered(true);
+          setRegistrationData(registration);
+          console.log("ha2:", registrationData);
         } else {
-          setIsRegistered(false)
+          setIsRegistered(false);
+          setRegistrationData(null);
         }
       } catch (error) {
-        console.error("Error checking registration:", error)
-        setIsRegistered(false)
-      } 
-    }
+        console.error("Error checking registration:", error);
+        setIsRegistered(false);
+      }
+    };
 
     if (uid && user.contentstack_uid) {
-      fetchRegistration()
+      fetchRegistration();
     }
-  }, [uid, user.contentstack_uid])
+  }, [uid, user.contentstack_uid]);
 
-
-  if (!opportunity) {
-    return <div className="flex flex-col items-center justify-center space-y-4 h-screen"><BeatLoader color="#04BD64" size={15} /></div>;
-  }
-
-  const dateObj = new Date(opportunity.event_date);
+  const dateObj = new Date(opportunity?.event_date);
   const date = dateObj.toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "long",
@@ -68,6 +67,43 @@ const OpportunityDetails = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  const handlecertificateGeneration = async (e) => {
+    try {
+      const pdfBlob = await generateCertificate({
+        name: registrationData?.full_name,
+        event: registrationData?.opportunity_title,
+        date: date,
+        certId: `ST-${opportunity?.event_date}-${user.contentstack_uid.slice(-4)}`,
+      });
+
+      const url = window.URL.createObjectURL(
+        new Blob([pdfBlob], { type: "application/pdf" }),
+      );
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "certificate.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Generation failed");
+    }
+  };
+
+  if (!opportunity) {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4 h-screen">
+        <BeatLoader color="#04BD64" size={15} />
+      </div>
+    );
+  }
+
+  console.log("dusra:", registrationData);
 
   const handleSuccess = () => {
     setShowToast(true);
@@ -104,7 +140,9 @@ const OpportunityDetails = () => {
         <div className="flex flex-wrap gap-6 text-sm text-gray-500 mb-10">
           <div className="flex items-center gap-2">
             <Calendar size={14} />
-            <span>{date} • {time}</span>
+            <span>
+              {date} • {time}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -115,27 +153,50 @@ const OpportunityDetails = () => {
 
         {/* Content */}
         <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-          {opportunity.about_event
-            ?.replace(/<[^>]+>/g, "")
-            .trim()}
+          {opportunity.about_event?.replace(/<[^>]+>/g, "").trim()}
         </div>
 
         {/* Divider */}
         <div className="my-14 h-px bg-gray-200" />
 
         {/* CTA */}
-        {opportunity.upcoming && !isRegistered &&
-        <div className="text-center">
-          <button onClick={() =>  setOpen(true)} className="px-12 py-4 rounded-full bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition">
-            Register Now
-          </button>
-          {open && <RegisterModal eventUID={uid} eventTitle={opportunity.title} onClose={() => setOpen(false)} onSuccess={handleSuccess} userUID = {user.contentstack_uid} />}  
-        </div>}
-        {isRegistered && opportunity.upcoming &&
+        {opportunity?.upcoming && !isRegistered && (
           <div className="text-center">
-            <p className="text-lg text-emerald-600 font-semibold p-5">Thanks for Registering! On successful participation you can generate your certificate from here</p>
+            <button
+              onClick={() => setOpen(true)}
+              className="px-12 py-4 rounded-full bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
+            >
+              Register Now
+            </button>
+            {open && (
+              <RegisterModal
+                eventUID={uid}
+                eventTitle={opportunity.title}
+                onClose={() => setOpen(false)}
+                onSuccess={handleSuccess}
+                userUID={user.contentstack_uid}
+              />
+            )}
           </div>
-        }
+        )}
+        {isRegistered && opportunity?.upcoming && (
+          <div className="text-center">
+            <p className="text-lg text-emerald-600 font-semibold p-5">
+              Thanks for Registering! On successful participation you can
+              generate your certificate from here
+            </p>
+          </div>
+        )}
+        {registrationData?.attended && (
+          <div className="text-center">
+            <button
+              onClick={handlecertificateGeneration}
+              className="px-12 py-4 rounded-full bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
+            >
+              Generate Certificate
+            </button>
+          </div>
+        )}
       </article>
     </div>
   );
