@@ -32,3 +32,7 @@ NEXT_PUBLIC_HOSTED_URL=http://localhost:3000
 
 # For setting custom host add CONTENTSTACK_API_HOST=for(NA: cdn.contentstack.io/, EU: eu-cdn.contentstack.com/)
 CONTENTSTACK_API_HOST=cdn.contentstack.io
+
+
+#npm run build
+#./Frontend/dist

@@ -8,11 +8,14 @@ import { useAuth } from "../context/AuthContext";
 import { getRegistrationByOpportunityAndUser } from "../api/helper";
 import { BeatLoader } from "react-spinners";
 import { generateCertificate } from "../api/posting";
+import { getOrganizationByUID } from "../api/helper";
+import { Link } from "react-router-dom";
 
 const OpportunityDetails = () => {
   const { uid } = useParams();
   const navigate = useNavigate();
   const [opportunity, setOpportunity] = useState(null);
+  const [organization, setOrganization] = useState(null);
   const [open, setOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -27,7 +30,16 @@ const OpportunityDetails = () => {
     fetchData();
   }, [uid]);
 
-  console.log("34:", opportunity);
+  const OrgID = opportunity?.organised_by?.[0]?.uid;
+
+  useEffect(() => {
+    if (!OrgID) return;
+    const fetchData = async () => {
+      const data = await getOrganizationByUID(OrgID);
+      setOrganization(data);
+    };
+    fetchData();
+  }, [OrgID]);
 
   useEffect(() => {
     const fetchRegistration = async () => {
@@ -110,6 +122,8 @@ const OpportunityDetails = () => {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+  console.log(opportunity.organised_by[0].uid);
+
   return (
     <div className="min-h-screen bg-white">
       {showToast && <SuccessToast />}
@@ -156,6 +170,34 @@ const OpportunityDetails = () => {
           {opportunity.about_event?.replace(/<[^>]+>/g, "").trim()}
         </div>
 
+        {organization?.uid && (
+          <div className="mt-12">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Organised by
+            </h3>
+
+            <Link
+              to={`/organizations/${organization.uid}`}
+              className="flex items-center gap-4 border-l-4 border-emerald-500 
+                 bg-white/70 backdrop-blur p-5 rounded-lg
+                 hover:bg-white transition max-w-lg"
+            >
+              <img
+                src={organization.organization_logo?.url}
+                alt=""
+                className="h-16 w-16 rounded-full object-cover"
+              />
+
+              <div>
+                <p className="text-lg font-semibold text-gray-900">
+                  {organization.title}
+                </p>
+                <p className="text-sm text-gray-500">View Organisation Details →</p>
+              </div>
+            </Link>
+          </div>
+        )}
+
         {/* Divider */}
         <div className="my-14 h-px bg-gray-200" />
 
@@ -164,7 +206,7 @@ const OpportunityDetails = () => {
           <div className="text-center">
             <button
               onClick={() => setOpen(true)}
-              className="px-12 py-4 rounded-full bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
+              className="px-12 py-4 rounded-xl bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
             >
               Register Now
             </button>
@@ -191,7 +233,7 @@ const OpportunityDetails = () => {
           <div className="text-center">
             <button
               onClick={handlecertificateGeneration}
-              className="px-12 py-4 rounded-full bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
+              className="px-12 py-4 rounded-xl bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
             >
               Generate Certificate
             </button>
