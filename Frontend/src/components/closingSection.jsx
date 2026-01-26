@@ -1,4 +1,5 @@
 import { motion, useInView } from "framer-motion";
+import { Link } from "react-router-dom";
 import { useRef } from "react";
 
 const ClosingSection = ({data1, data2}) => {
@@ -40,14 +41,14 @@ const ClosingSection = ({data1, data2}) => {
           {data2}
         </p>
 
-        <button
+        <Link to="/opportunities"
           className="px-10 py-4 rounded-full bg-emerald-500 text-white 
           font-semibold 
           hover:scale-105 
           transition-all duration-300"
         >
           {data1.button}
-        </button>
+        </Link>
       </motion.div>
     </section>
   );
