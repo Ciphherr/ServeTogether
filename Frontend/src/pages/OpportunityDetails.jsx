@@ -225,7 +225,7 @@ const OpportunityDetails = () => {
                 eventTitle={opportunity.title}
                 onClose={() => setOpen(false)}
                 onSuccess={handleSuccess}
-                userUID={user.contentstack_uid}
+                userUID={user?.contentstack_uid}
               />
             )}
           </div>
