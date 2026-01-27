@@ -20,6 +20,7 @@ const OpportunityDetails = () => {
   const [showToast, setShowToast] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [registrationData, setRegistrationData] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -82,6 +83,7 @@ const OpportunityDetails = () => {
 
   const handlecertificateGeneration = async (e) => {
     try {
+      setIsGenerating(true);
       const pdfBlob = await generateCertificate({
         name: registrationData?.full_name,
         event: registrationData?.opportunity_title,
@@ -95,7 +97,7 @@ const OpportunityDetails = () => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = "certificate.pdf";
+      link.download = `${registrationData?.full_name}-certificate.pdf`;
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -104,6 +106,8 @@ const OpportunityDetails = () => {
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Generation failed");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -166,9 +170,12 @@ const OpportunityDetails = () => {
         </div>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-          {opportunity.about_event?.replace(/<[^>]+>/g, "").trim()}
-        </div>
+        <div
+          className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+          dangerouslySetInnerHTML={{
+            __html: opportunity?.about_event || "",
+          }}
+        />
 
         {organization?.uid && (
           <div className="mt-12">
@@ -192,7 +199,9 @@ const OpportunityDetails = () => {
                 <p className="text-lg font-semibold text-gray-900">
                   {organization.title}
                 </p>
-                <p className="text-sm text-gray-500">View Organisation Details →</p>
+                <p className="text-sm text-gray-500">
+                  View Organisation Details →
+                </p>
               </div>
             </Link>
           </div>
@@ -233,9 +242,22 @@ const OpportunityDetails = () => {
           <div className="text-center">
             <button
               onClick={handlecertificateGeneration}
-              className="px-12 py-4 rounded-xl bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-700 transition"
+              disabled={isGenerating}
+              className={`px-12 py-4 rounded-xl text-white font-semibold text-lg transition
+        ${
+          isGenerating
+            ? "bg-emerald-400 cursor-not-allowed"
+            : "bg-emerald-600 hover:bg-emerald-700"
+        }`}
             >
-              Generate Certificate
+              {isGenerating ? (
+                <div className="flex items-center justify-center gap-2">
+                  <BeatLoader size={8} color="#ffffff" />
+                  <span>Generating...</span>
+                </div>
+              ) : (
+                "Generate Certificate"
+              )}
             </button>
           </div>
         )}
