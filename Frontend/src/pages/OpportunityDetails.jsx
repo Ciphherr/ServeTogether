@@ -238,7 +238,7 @@ const OpportunityDetails = () => {
             </p>
           </div>
         )}
-        {registrationData?.attended && (
+        {registrationData?.attended && !opportunity?.upcoming && (
           <div className="text-center">
             <button
               onClick={handlecertificateGeneration}
