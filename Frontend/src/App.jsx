@@ -8,7 +8,7 @@ import OrganizationDetails from "./pages/OrganizationDetails";
 import AuthPage from "./pages/AuthPage";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import CertificatePreview from "./pages/certificatePreview";
+
 
 function App() {
   return (
