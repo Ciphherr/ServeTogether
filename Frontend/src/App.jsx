@@ -22,8 +22,7 @@ function App() {
         <Route path="/myprofile" element={<ProtectedRoute><UserProfile/></ProtectedRoute>}/>
         <Route path="/authentication" element={<AuthPage />} />
         <Route path="/opportunities/:uid" element={<ProtectedRoute><OpportunityDetails /></ProtectedRoute>} />
-        <Route path="/organizations/:uid" element={<ProtectedRoute><OrganizationDetails/></ProtectedRoute>} />
-        <Route path="/certificate" element={<CertificatePreview />}/>    
+        <Route path="/organizations/:uid" element={<ProtectedRoute><OrganizationDetails/></ProtectedRoute>} />  
       </Routes>
   );
 }
